@@ -2,6 +2,7 @@ package com.travelNepal.controller;
 
 import java.util.List;
 
+import com.travelNepal.exception.UsersException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class FeedbackController {
 	private FeedbackService feedbackService;
 	
 	@PostMapping("/addFeedback/{sessionId}/{packageId}")
-	public ResponseEntity<FeedbackResponse> addFeedback(@Valid @RequestBody Feedback feedback, @PathVariable String sessionId, @PathVariable Integer packageId) throws LoginException, CustomerException, FeedbackException{
+	public ResponseEntity<FeedbackResponse> addFeedback(@Valid @RequestBody Feedback feedback, @PathVariable String sessionId, @PathVariable Integer packageId) throws LoginException, UsersException, FeedbackException{
 		FeedbackResponse feed = feedbackService.addFeedback(sessionId, feedback, packageId);
 		return new ResponseEntity<FeedbackResponse>(feed, HttpStatus.OK);
 	}
