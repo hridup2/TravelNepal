@@ -1,6 +1,6 @@
 package com.travelNepal.exception;
 
-public class PackageException extends Exception {
+public class PackageException extends RuntimeException {
 
 	public PackageException() {
 		super();

@@ -81,6 +81,12 @@ public class GlobalExceptionHandler {
 		ResponseEntity<MyErrorDetails> rs = new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
 		return rs;
 	}
-	
 
+	@ExceptionHandler(PackageException.class)
+	public ResponseEntity<MyErrorDetails> PackageExceptionHandler(PackageException ax, WebRequest req) {
+
+		MyErrorDetails err = new MyErrorDetails(ax.getMessage(), req.getDescription(false), LocalDateTime.now());
+		ResponseEntity<MyErrorDetails> rs = new ResponseEntity<>(err, HttpStatus.OK);
+		return rs;
+	}
 }

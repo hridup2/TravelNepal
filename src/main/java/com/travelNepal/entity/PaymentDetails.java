@@ -14,7 +14,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -46,9 +45,5 @@ public class PaymentDetails {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "booking_id")
 	private Booking booking;
-	
-	@ManyToOne
-	@JoinColumn(name = "report_id")
-	private Report report;
 
 }

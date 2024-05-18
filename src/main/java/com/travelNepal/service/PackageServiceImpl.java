@@ -101,6 +101,11 @@ public class PackageServiceImpl implements PackageService {
 		return pack.get();
 	}
 
+	@Override
+	public List<Package> addAllPackages(List<Package> packages) {
+        return packageRepo.saveAll(packages);
+	}
+
 	/**
 	 * Retrieves all packages in the system.
 	 *
@@ -108,7 +113,7 @@ public class PackageServiceImpl implements PackageService {
 	 * @throws PackageException If no packages are found.
 	 */
 	@Override
-	public List<Package> viewAllPackages() throws PackageException, LoginException, AdminException {
+	public List<Package> viewAllPackages() throws PackageException {
 		List<Package> packages = packageRepo.findAll();
 		if (packages.size() == 0)
 			throw new PackageException("package not found");
@@ -226,5 +231,40 @@ public class PackageServiceImpl implements PackageService {
 
 		return hotels;
 	}
+
+	public Package updatePackage(String sessionId, Integer packageId, Package updatedPackage) throws PackageException, LoginException, AdminException {
+		// Check if the user is logged in
+		CurrentUserSession currentUserSession = sessRepo.findBySessionId(sessionId);
+		if (currentUserSession == null) {
+			throw new LoginException("You are not logged in.");
+		}
+
+		// Check if the user is an admin
+		if (currentUserSession.getRole() != Role.ADMIN) {
+			throw new AdminException("User is not authorized.");
+		}
+
+		// Check if the package exists
+		Optional<Package> packageOptional = packageRepo.findById(packageId);
+		if (packageOptional.isEmpty()) {
+			throw new PackageException("Package not found.");
+		}
+
+		// Get the existing package
+		Package existingPackage = packageOptional.get();
+
+		// Update the package properties
+		existingPackage.setPackageName(updatedPackage.getPackageName());
+		existingPackage.setPackageDescription(updatedPackage.getPackageDescription());
+		existingPackage.setPackagePrice(updatedPackage.getPackagePrice());
+		existingPackage.setDays(updatedPackage.getDays());
+		existingPackage.setMapScreenshotUrl(updatedPackage.getMapScreenshotUrl());
+		existingPackage.setDestinationPhotoUrl(updatedPackage.getDestinationPhotoUrl());
+		// Update other properties as necessary
+
+		// Save the updated package
+		return packageRepo.save(existingPackage);
+	}
+
 
 }

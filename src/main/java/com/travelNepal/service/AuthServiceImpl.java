@@ -10,8 +10,8 @@ import com.travelNepal.entity.CurrentUserSession.Role;
 import com.travelNepal.entity.Users;
 import com.travelNepal.exception.LoginException;
 import com.travelNepal.repository.AdminRepository;
-import com.travelNepal.repository.UserRepository;
 import com.travelNepal.repository.SessionRepository;
+import com.travelNepal.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -87,18 +87,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String createUser(SignupDTO signupDTO) {
+
         Users user = new Users();
         user.setName(signupDTO.getName());
         user.setEmail(signupDTO.getEmail());
         user.setPassword(signupDTO.getPassword());
-
-        Admin admin = objectMapper.convertValue(user, Admin.class);
-        user = userRepo.save(user);
-        admin.setPassword(signupDTO.getPassword());
         user.setPassword(signupDTO.getPassword());
         userRepo.save(user);
-        adminRepo.save(admin);
-
         return "User Successfully Created";
 
     }
