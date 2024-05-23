@@ -10,12 +10,9 @@ public class BookingDTO {
 	private String description;
 	private Integer numberOfPeople;
 	private LocalDate startDateJourney;
-	private LocalDate endDateJourney;
-	private String routeFrom;
-	private String routeTo;
+	private String country;
 	private Integer user_id;
 	private Integer package_id;
-	private Integer hotel_id;
 	private String paymentType;
 	private double amount;
 	

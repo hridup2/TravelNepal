@@ -6,8 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public class FeedbackResponse {
 	private LocalDateTime responseTime;
 	private String message;
+
+	public FeedbackResponse(LocalDateTime now, String feedbackSucessfullySubmitted) {
+	}
 }

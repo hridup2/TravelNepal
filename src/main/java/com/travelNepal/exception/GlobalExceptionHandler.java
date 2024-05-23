@@ -57,22 +57,7 @@ public class GlobalExceptionHandler {
 		ResponseEntity<MyErrorDetails> rs = new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
 		return rs;
 	}
-	
-	@ExceptionHandler(RouteException.class)
-	public ResponseEntity<MyErrorDetails> RouteExceptionHandler(RouteException rx, WebRequest req) {
 
-		MyErrorDetails err = new MyErrorDetails(rx.getMessage(), req.getDescription(false), LocalDateTime.now());
-		ResponseEntity<MyErrorDetails> rs = new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
-		return rs;
-	}
-	
-//	@ExceptionHandler(BusException.class)
-//	public ResponseEntity<MyErrorDetails> BusExceptionHandler(BusException bx, WebRequest req) {
-//
-//		MyErrorDetails err = new MyErrorDetails(bx.getMessage(), req.getDescription(false), LocalDateTime.now());
-//		ResponseEntity<MyErrorDetails> rs = new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
-//		return rs;
-//	}
 	
 	@ExceptionHandler(AdminException.class)
 	public ResponseEntity<MyErrorDetails> AdminExceptionHandler(AdminException ax, WebRequest req) {

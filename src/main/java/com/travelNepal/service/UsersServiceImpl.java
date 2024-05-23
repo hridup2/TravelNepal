@@ -27,12 +27,7 @@ public class UsersServiceImpl implements UsersService {
     //	@Autowired is used to resolve SessionRepository dependency
     @Autowired
     private SessionRepository sessionRepo;
-    //	@Autowired is used to resolve EmailsenderService dependency
-//    @Autowired
-//    private EmailsenderService emailService;
-//    //	@Autowired is used to resolve OtpRepository dependency
-//    @Autowired
-//    private OtpRepository otpRepository;
+
 
     @Override
     public Users registerNewUser(Users user) throws UsersException {
@@ -55,14 +50,7 @@ public class UsersServiceImpl implements UsersService {
         return userRepo.save(user);
     }
 
-    /**
-     *
-     * @param sessionId To verify actual customer or not
-     * @param user New Customer Details in Customer Object
-     * @return Updated Customer Details
-     * @throws LoginException if user not verify or wrong user found
-     * @throws UsersException if customer was not present in Record
-     */
+
     @Override
     public Users updateUser(String sessionId, Users user) throws LoginException, UsersException {
 
@@ -83,16 +71,7 @@ public class UsersServiceImpl implements UsersService {
 
         return userRepo.save(existingUser);
     }
-    /**
-     *
-     * Mathod restricted for customer only Admin are eligible
-     * @param sessionId To verify actual customer or not
-     * @param userId To get Customer Detail to identification
-     * @return Deleted Customer Details to Show
-     * @throws LoginException if User is not Login into our application
-     * @throws AdminException if user is not authorized
-     * @throws UsersException if customer details not found
-     */
+
     @Override
     public Users deleteUser(String sessionId, Integer userId)
             throws LoginException, AdminException, UsersException {
@@ -113,13 +92,7 @@ public class UsersServiceImpl implements UsersService {
 
     }
 
-    /**
-     *
-     * @param sessionId to verify user is login into our application or not
-     * @return Customer Details except password
-     * @throws LoginException if user is not login into our application
-     * @throws UsersException if customer details not found
-     */
+
     @Override
     public Users getUsersBySessionId(String sessionId) throws LoginException, UsersException {
         CurrentUserSession cus = sessionRepo.findBySessionId(sessionId);
@@ -132,16 +105,7 @@ public class UsersServiceImpl implements UsersService {
 
         return opt.get();
     }
-    /**
-     *
-     * Mathod restricted for customer only Admin are eligible
-     * @param sessionId to verify user is login into our application or not
-     * @param userId to get customer details from record
-     * @return required customer details
-     * @throws LoginException if user not login into our application
-     * @throws UsersException
-     * @throws AdminException
-     */
+
     @Override
     public Users getUsersByUserId(String sessionId, Integer userId)
             throws LoginException, UsersException, AdminException {
@@ -159,15 +123,7 @@ public class UsersServiceImpl implements UsersService {
         throw new AdminException("User Not Authorized!");
 
     }
-    /**
-     *
-     * Mathod restricted for customer only Admin are eligible
-     * @param sessionId to verify Admin
-     * @return return list of all customer that are registered into record
-     * @throws LoginException if user are not login into our application
-     * @throws AdminException if user is not authorized to perform
-     * @throws UsersException is not a single customer details found
-     */
+
     @Override
     public List<Users> getAllUsers(String sessionId) throws LoginException, AdminException, UsersException {
         CurrentUserSession cus = sessionRepo.findBySessionId(sessionId);

@@ -31,6 +31,7 @@ public class Booking {
 	private String bookingTitle;
 	private String description;
 	private Integer numberOfPeople;
+	private String country;
 	private LocalDateTime bookingDate;
 	
 	//relationships
@@ -46,21 +47,11 @@ public class Booking {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "packageId")
     private Package tourPackage;
-    
-    // Relationship mappings
-//	@JsonProperty(access = Access.READ_ONLY)
-//    @OneToOne(mappedBy = "booking",cascade = CascadeType.ALL)
-//    private TicketDetails ticketDetails;
+
     
     // One-to-one relationship with PaymentDetails
 	@JsonProperty(access = Access.READ_ONLY)
     @OneToOne(mappedBy = "booking",cascade = CascadeType.ALL)
     private PaymentDetails paymentDetails;
 
-    
-	@JsonProperty(access = Access.READ_ONLY)
-    @ManyToOne
-    @JoinColumn(name = "hotelId")
-    private Hotel hotel;
-	
 }

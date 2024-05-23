@@ -3,8 +3,8 @@ package com.travelNepal.dto;
 import java.util.List;
 
 import com.travelNepal.entity.Feedback;
-import com.travelNepal.entity.Hotel;
 
+import com.travelNepal.entity.PackageDescription;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,11 +18,10 @@ public class PackageDTO {
 
     private Integer packageId;
     private String packageName;
-    private String packageDescription;
+    private PackageDescription packageDescription;
     private Integer days;
     private Double packagePrice;
     private String mapScreenshotUrl;
     private String destinationPhotoUrl;
-    private List<Hotel> hotels;
     private List<Feedback> feedbacks;
 }

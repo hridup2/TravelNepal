@@ -7,15 +7,13 @@ import com.travelNepal.entity.Booking;
 import com.travelNepal.exception.AdminException;
 import com.travelNepal.exception.BookingException;
 import com.travelNepal.exception.UsersException;
-import com.travelNepal.exception.HotelException;
 import com.travelNepal.exception.LoginException;
 import com.travelNepal.exception.PackageException;
-import com.travelNepal.exception.RouteException;
 
 public interface BookingService {
 	
 	
-	public Booking makeBooking(String uuid , BookingDTO bookingdto) throws BookingException,LoginException,UsersException, RouteException, PackageException,HotelException;
+	public Booking makeBooking(String uuid , BookingDTO bookingdto) throws BookingException,LoginException,UsersException, PackageException;
 	
 	public Booking cancelBooking(String sessionId, Integer bookingId) throws BookingException, LoginException, UsersException;
 	

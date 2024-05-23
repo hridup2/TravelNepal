@@ -27,12 +27,7 @@ public class AuthController {
 
 	@Autowired
 	private UsersService userService;
-	/**
-	 *
-	 * @param dto  				The User Credentials
-	 * @return 					The Current User Session with Session ID
-	 * @throws LoginException 	If User Not Registered
-	 */
+
 	@PostMapping("/login")
 	public ResponseEntity<CurrentUserSession> loginIntoApplication(@RequestBody LoginDTO dto) throws LoginException{
 		CurrentUserSession cus = loginService.logIntoApplication(dto);
@@ -46,12 +41,7 @@ public class AuthController {
 
 		return loginService.createUser(signupDTO);
 	}
-	/**
-	 *
-	 * @param sessionId			The Unique Session Id
-	 * @return					Response Message
-	 * @throws LoginException	If User Not Login
-	 */
+
 	@PostMapping("/logout")
 	public ResponseEntity<ResponseMessage> logoutFromApplication(@RequestParam("sessionId") String sessionId) throws LoginException{
 		ResponseMessage responseMessage = loginService.logoutFromApplication(sessionId);

@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.travelNepal.entity.Users;
 import com.travelNepal.exception.UsersException;
+import com.travelNepal.repository.FeedbackRepository;
 import com.travelNepal.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,8 +32,9 @@ public class FeedbackServiceImpl implements FeedbackService{
 	@Autowired
 	private PackageRepository packageRepo;
 	@Autowired
-	private EmailsenderService emailService;
-	
+	private FeedbackRepository feedbackRepo;
+
+
 	@Override
 	public FeedbackResponse addFeedback(String sessionId, Feedback feedback, Integer packageId) throws FeedbackException, LoginException, UsersException {
 		// TODO Auto-generated method stub
@@ -42,18 +44,12 @@ public class FeedbackServiceImpl implements FeedbackService{
 		Optional<Users> user = userRepo.findById(cus.getUserId());
 		if (user.isEmpty())
 			throw new UsersException("Customer not found");
-		
+
 		Users us = user.get();
 		Optional<Package> pack = packageRepo.findById(packageId) ;
 		pack.get().getFeedbacks().add(feedback);
-//		feedbackRepo.save(feedback);
-		
-		// Send an email .
-		String emailSubject = "Feedback Response";
-		String interviewerBody = "Dear " +us.getName()+"," +"\n\n thank you for your valueable feedback.";
-		String email = us.getEmail();
-		emailService.sendEmail(email, emailSubject, interviewerBody);
-		
+		feedbackRepo.save(feedback);
+
 		return new FeedbackResponse(LocalDateTime.now(), "Feedback sucessfully submitted");
 	}
 
@@ -66,12 +62,20 @@ public class FeedbackServiceImpl implements FeedbackService{
 		if (cus.getRole() != Role.ADMIN) {
 			throw new LoginException("Incorrect Credentials");
 		}
-		
+
 		Optional<Package> pack = packageRepo.findById(packageid);
 		if(pack==null) throw new PackageException("Package not found with the same id");
 		List<Feedback> list = pack.get().getFeedbacks();
 		if(list==null) throw new FeedbackException("Feedback not found");
 		return list;
 	}
-	
+
+	@Override
+	public FeedbackResponse updateFeedback(Feedback feedback, String sessionId, Integer feedbackId) throws LoginException, UsersException, FeedbackException {
+		return null;
+	}
+
+
+	public void deleteFeedback(String sessionId, Integer feedbackId) throws LoginException, UsersException, FeedbackException {
+	}
 }
