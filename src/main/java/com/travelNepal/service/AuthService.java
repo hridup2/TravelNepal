@@ -9,9 +9,9 @@ import com.travelNepal.exception.LoginException;
 
 public interface AuthService {
 
-	public CurrentUserSession logIntoApplication(LoginDTO Dto) throws LoginException;
+    CurrentUserSession logIntoApplication(LoginDTO Dto) throws LoginException;
 
-	public ResponseMessage logoutFromApplication(String sessionId) throws LoginException;
+    ResponseMessage logoutFromApplication(String sessionId) throws LoginException;
 
-	String createUser(SignupDTO signupDto);
+    String createUser(SignupDTO signupDto);
 }

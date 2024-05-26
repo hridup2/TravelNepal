@@ -46,6 +46,7 @@ public class AuthServiceImpl implements AuthService {
                 cus.setRole(Role.ADMIN);
                 cus.setUserId(admin.getUserId());
                 cus.setSessionId(sessionId);
+                cus.setUserEmail(admin.getEmail());
 
                 return sessionRepo.save(cus);
             } else {
@@ -66,6 +67,7 @@ public class AuthServiceImpl implements AuthService {
                 cus.setRole(Role.CUSTOMER);
                 cus.setUserId(user.getUserId());
                 cus.setSessionId(sessionId);
+                cus.setUserEmail(user.getEmail());
 
                 return sessionRepo.save(cus);
             } else {
@@ -91,7 +93,6 @@ public class AuthServiceImpl implements AuthService {
         Users user = new Users();
         user.setName(signupDTO.getName());
         user.setEmail(signupDTO.getEmail());
-        user.setPassword(signupDTO.getPassword());
         user.setPassword(signupDTO.getPassword());
         userRepo.save(user);
         return "User Successfully Created";

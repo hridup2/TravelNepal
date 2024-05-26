@@ -10,7 +10,7 @@ import com.travelNepal.entity.Package;
 
 public interface PackageRepository extends JpaRepository<Package, Integer>{
 	
-	public Package findByPackageName(String packageName); 
+	public Package findByPackageId(Integer packageId);
 	
 	
 	@Query(value = "select * from hotel h where h.hotel_id IN (select ph.hotel_id from package_hotel ph where ph.package_id=:id group by ph.package_id) ",nativeQuery = true)

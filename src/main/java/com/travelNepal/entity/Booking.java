@@ -1,10 +1,12 @@
 package com.travelNepal.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
+import com.travelNepal.enums.BookingStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,11 +30,11 @@ public class Booking {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer bookingId;
-	private String bookingTitle;
+	private String bookingTittle;
+	private String guestEmail;
 	private String description;
-	private Integer numberOfPeople;
-	private String country;
-	private LocalDateTime bookingDate;
+	private Integer numberOfGuest;
+	private LocalDate startDateJourney;
 	
 	//relationships
 	
@@ -48,10 +50,12 @@ public class Booking {
     @JoinColumn(name = "packageId")
     private Package tourPackage;
 
+	private BookingStatus bookingStatus;
+
     
-    // One-to-one relationship with PaymentDetails
-	@JsonProperty(access = Access.READ_ONLY)
-    @OneToOne(mappedBy = "booking",cascade = CascadeType.ALL)
-    private PaymentDetails paymentDetails;
+//    // One-to-one relationship with PaymentDetails
+//	@JsonProperty(access = Access.READ_ONLY)
+//    @OneToOne(mappedBy = "booking",cascade = CascadeType.ALL)
+//    private PaymentDetails paymentDetails;
 
 }

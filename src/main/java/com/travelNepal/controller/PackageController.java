@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,8 +26,8 @@ public class PackageController {
 
 
     @PostMapping("/create/{sessionId}")
-    public ResponseEntity<Package> addPackageController(@Valid @RequestBody Package pack, @PathVariable String sessionId) throws PackageException, LoginException, AdminException {
-        Package pp = packService.addPackage(sessionId, pack);
+    public ResponseEntity<Package> addPackageController(@Valid @RequestBody Package pack, @PathVariable String sessionId, MultipartFile photo) throws PackageException, LoginException, AdminException, IOException {
+        Package pp = packService.addPackage(sessionId, pack, photo);
         return new ResponseEntity<>(pp, HttpStatus.OK);
     }
 

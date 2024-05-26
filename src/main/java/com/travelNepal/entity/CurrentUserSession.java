@@ -24,4 +24,5 @@ public class CurrentUserSession {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 	private LocalDateTime loginTime;
+	private String userEmail;
 }

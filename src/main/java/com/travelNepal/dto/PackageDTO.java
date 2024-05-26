@@ -21,7 +21,7 @@ public class PackageDTO {
     private PackageDescription packageDescription;
     private Integer days;
     private Double packagePrice;
-    private String mapScreenshotUrl;
+    private String mapPhotoUrl;
     private String destinationPhotoUrl;
     private List<Feedback> feedbacks;
 }

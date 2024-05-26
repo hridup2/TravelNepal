@@ -21,8 +21,8 @@ public class Feedback {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer feedbackId;
-	private String customerName;
-	private String feedbackDesciption;
+	private String Name;
+	private String feedback;
 	@JsonProperty(access = Access.READ_ONLY)
 	private LocalDateTime submitTime = LocalDateTime.now();
 

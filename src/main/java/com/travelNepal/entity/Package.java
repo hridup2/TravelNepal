@@ -14,35 +14,35 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Package {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer packageId;
-	private String packageName;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer packageId;
+    private String packageName;
 
     @Embedded
-	private PackageDescription packageDescription;
+    private PackageDescription packageDescription;
 
-	private Integer days;
-	private Double packagePrice;
+    private Integer days;
+    private Double packagePrice;
     private String destinationPhotoUrl;
 
 
-	
-	 // One-to-many relationship with Booking
-	@JsonIgnore
+
+    // One-to-many relationship with Booking
+    @JsonIgnore
     @OneToMany(mappedBy = "tourPackage")
     private List<Booking> bookings = new ArrayList<>();
 
-	
+
     @ElementCollection
     @Embedded
     @JoinTable(
             name = "feedback",
             joinColumns = @JoinColumn(name = "packageId")
-        )
+    )
     private List<Feedback> feedbacks = new ArrayList<>();
-    
-    
-	
+
+
+
 }

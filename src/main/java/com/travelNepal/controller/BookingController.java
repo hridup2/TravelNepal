@@ -15,6 +15,7 @@ import com.travelNepal.exception.UsersException;
 import com.travelNepal.exception.LoginException;
 import com.travelNepal.exception.PackageException;
 import com.travelNepal.service.BookingService;
+import java.util.Map;
 
 import jakarta.validation.Valid;
 
@@ -35,14 +36,18 @@ public class BookingController {
 	
 
 	@PutMapping("/cancel/{sessionId}")
-	public ResponseEntity<Booking> cancelBookingController(@Valid  @PathVariable String sessionId,@RequestParam("bookingId") Integer bookingId) throws LoginException,BookingException, UsersException, PackageException{
+	public ResponseEntity<Booking> cancelBookingController(@Valid  @PathVariable String sessionId,@RequestBody Map<String, Integer> request) throws LoginException,BookingException, UsersException, PackageException{
+		Integer bookingId = request.get("bookingId");
+		if (bookingId == null) {
+			throw new IllegalArgumentException("Booking ID must be provided");
+		}
 		Booking book = bookService.cancelBooking(sessionId, bookingId);
 		return new ResponseEntity<>(book, HttpStatus.OK);
 	}
 
 	@GetMapping("/view/{sessionId}")
-	public ResponseEntity<Booking> viewBookingController(@Valid  @PathVariable String sessionId,@RequestParam("bookingId") Integer bookingId) throws LoginException, BookingException, UsersException, PackageException{
-		Booking book = bookService.viewBooking(sessionId, bookingId);
+	public ResponseEntity<List<Booking>> viewBookingController(@Valid @PathVariable String sessionId,@RequestParam("userId") Integer userId) throws LoginException, BookingException, UsersException, PackageException{
+		List<Booking> book = bookService.viewBooking(sessionId, userId);
 		return new ResponseEntity<>(book, HttpStatus.OK);
 	}
 	
