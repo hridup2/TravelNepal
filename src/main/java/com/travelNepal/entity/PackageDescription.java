@@ -12,15 +12,14 @@ import java.util.Map;
 public class PackageDescription {
 
     private String mapPhotoUrl;
+
     @ElementCollection
     @CollectionTable(name = "map_itinerary", joinColumns = @JoinColumn(name = "package_id"))
     @MapKeyColumn(name = "day")
     @Column(name = "description")
     private Map<String, String> mapItinerary;
 
-    @ElementCollection
-    @CollectionTable(name = "safety_guidelines", joinColumns = @JoinColumn(name = "package_id"))
-    @MapKeyColumn(name = "guidelines_key")
-    @Column(name = "description")
-    private Map<String, String> safetyGuidelines;
+    private String safetyGuidelines;
+
+
 }

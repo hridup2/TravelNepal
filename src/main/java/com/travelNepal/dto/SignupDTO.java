@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class SignupDTO {
 
-    private String Name;
+    private String name;
     private String email;
     private String password;
 

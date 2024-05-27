@@ -29,9 +29,9 @@ public class FeedbackController {
 		return new ResponseEntity<FeedbackResponse>(feed, HttpStatus.OK);
 	}
 	
-	@GetMapping("/feedbacklist/{sessionId}/{packageId}")
-	public ResponseEntity<List<Feedback>> getFeedbackByPackageId(@PathVariable String sessionId, @PathVariable int packageId) throws LoginException, PackageException, FeedbackException{
-		List<Feedback> feed = feedbackService.getFeedbackByPackageId(sessionId, packageId);
+	@GetMapping("/feedbacklist/{packageId}")
+	public ResponseEntity<List<Feedback>> getFeedbackByPackageId( @PathVariable int packageId) throws LoginException, PackageException, FeedbackException{
+		List<Feedback> feed = feedbackService.getFeedbackByPackageId(packageId);
 		return new ResponseEntity<List<Feedback>>(feed, HttpStatus.OK);
 	}
 

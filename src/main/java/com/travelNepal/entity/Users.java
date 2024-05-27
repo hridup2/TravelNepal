@@ -29,7 +29,7 @@ public  class Users {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId;
 
-    private String Name;
+    private String name;
     private String email;
     @JsonProperty(access = Access.WRITE_ONLY)
     private String password;

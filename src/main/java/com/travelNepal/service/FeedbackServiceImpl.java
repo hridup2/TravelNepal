@@ -45,37 +45,81 @@ public class FeedbackServiceImpl implements FeedbackService{
 		if (user.isEmpty())
 			throw new UsersException("Customer not found");
 
-		Users us = user.get();
-		Optional<Package> pack = packageRepo.findById(packageId) ;
-		pack.get().getFeedbacks().add(feedback);
-		feedbackRepo.save(feedback);
+		Optional<Package> pack = packageRepo.findById(packageId);
+		if (pack.isEmpty())
+			throw new FeedbackException("Package not found with the provided id");
 
+
+		feedback.setUser(user.get());
+		feedback.setPack(pack.get());
+		feedback.setSubmitTime(LocalDateTime.now());
+
+		feedbackRepo.save(feedback);
 		return new FeedbackResponse(LocalDateTime.now(), "Feedback sucessfully submitted");
 	}
 
 	@Override
-	public List<Feedback> getFeedbackByPackageId(String sessionId, int packageid) throws FeedbackException, PackageException, LoginException{
-		// TODO Auto-generated method stub
-		CurrentUserSession cus = sessRepo.findBySessionId(sessionId);
-		if (cus == null)
-			throw new LoginException("You're not logged in");
-		if (cus.getRole() != Role.ADMIN) {
-			throw new LoginException("Incorrect Credentials");
+	public List<Feedback> getFeedbackByPackageId(Integer packageId) throws FeedbackException, PackageException, LoginException{
+		Optional<Package> pack = packageRepo.findById(packageId);
+		if (!pack.isPresent()) {
+			throw new PackageException("Package not found with the provided id");
 		}
-
-		Optional<Package> pack = packageRepo.findById(packageid);
-		if(pack==null) throw new PackageException("Package not found with the same id");
 		List<Feedback> list = pack.get().getFeedbacks();
-		if(list==null) throw new FeedbackException("Feedback not found");
+		if (list == null || list.isEmpty()) {
+			throw new FeedbackException("NO feedback available ");
+		}
 		return list;
 	}
 
+
 	@Override
 	public FeedbackResponse updateFeedback(Feedback feedback, String sessionId, Integer feedbackId) throws LoginException, UsersException, FeedbackException {
-		return null;
+		CurrentUserSession cus = sessRepo.findBySessionId(sessionId);
+		if (cus == null) {
+			throw new LoginException("You're not logged in");
+		}
+
+		Optional<Feedback> optionalFeedback = feedbackRepo.findById(feedbackId);
+		if (optionalFeedback.isEmpty()) {
+			throw new FeedbackException("Feedback not found with id: " + feedbackId);
+		}
+
+		Feedback existingFeedback = optionalFeedback.get();
+
+		if (!existingFeedback.getUser().getUserId().equals(cus.getUserId()) && cus.getRole() != Role.ADMIN) {
+			throw new UsersException("You don't have permission to update this feedback");
+		}
+
+		// Step 4: Update the feedback with the new details
+		existingFeedback.setName(feedback.getName());
+		existingFeedback.setFeedback(feedback.getFeedback());
+		Feedback updatedFeedback = feedbackRepo.save(existingFeedback);
+
+		// Step 6: Convert the updated feedback to FeedbackResponse (assuming you have a conversion method)
+		FeedbackResponse feedbackResponse = new FeedbackResponse(LocalDateTime.now(), "Feedback successfully updated");
+
+		return feedbackResponse;
 	}
 
 
 	public void deleteFeedback(String sessionId, Integer feedbackId) throws LoginException, UsersException, FeedbackException {
+		CurrentUserSession cus = sessRepo.findBySessionId(sessionId);
+		if (cus == null) {
+			throw new LoginException("You're not logged in");
+		}
+
+		Optional<Feedback> optionalFeedback = feedbackRepo.findById(feedbackId);
+		if (optionalFeedback.isEmpty()) {
+			throw new FeedbackException("Feedback not found with id: " + feedbackId);
+		}
+
+		Feedback existingFeedback = optionalFeedback.get();
+
+		if (!existingFeedback.getUser().getUserId().equals(cus.getUserId()) && cus.getRole() != Role.ADMIN) {
+			throw new UsersException("You don't have permission to update this feedback");
+		}
+		// Step 4: Delete the feedback
+		feedbackRepo.delete(existingFeedback);
+
 	}
 }
