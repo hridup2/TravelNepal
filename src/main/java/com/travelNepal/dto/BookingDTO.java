@@ -14,5 +14,6 @@ public class BookingDTO {
 	private String description;
 	private Integer user_id;
 	private Integer package_id;
+	private Integer hotel_id;
 	
 }

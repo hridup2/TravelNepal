@@ -9,15 +9,12 @@ import com.travelNepal.entity.*;
 import com.travelNepal.entity.Package;
 import com.travelNepal.enums.BookingStatus;
 import com.travelNepal.exception.*;
+import com.travelNepal.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.travelNepal.dto.BookingDTO;
 import com.travelNepal.entity.CurrentUserSession.Role;
-import com.travelNepal.repository.BookingRepository;
-import com.travelNepal.repository.PackageRepository;
-import com.travelNepal.repository.SessionRepository;
-import com.travelNepal.repository.UserRepository;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -38,9 +35,12 @@ public class BookingServiceImpl implements BookingService {
 	@Autowired
 	private PackageRepository packageRepo;
 
+	@Autowired
+	private HotelRepository hotelRepo;
+
 	@Override
 	public Booking makeBooking(String sessionId, BookingDTO bookingdto) throws BookingException, LoginException,
-			UsersException, PackageException {
+			UsersException, PackageException, HotelException {
 
 		CurrentUserSession cus = sessRepo.findBySessionId(sessionId);
 		if (cus == null)
@@ -58,6 +58,13 @@ public class BookingServiceImpl implements BookingService {
 		newBooking.setDescription(bookingdto.getDescription());
 		newBooking.setUsers(us);
         newBooking.setBookingStatus(BookingStatus.BOOKED);
+
+		Optional<Hotel> hotelopt = hotelRepo.findById(bookingdto.getHotel_id());
+		if (hotelopt.isEmpty())
+			throw new HotelException("hotel not available");
+		Hotel hotel = hotelopt.get();
+		hotel.getBookings().add(newBooking);
+		newBooking.setHotel(hotel);
 
 		Optional<Package> pac = packageRepo.findById(bookingdto.getPackage_id());
 		if (pac.isEmpty())

@@ -2,6 +2,7 @@ package com.travelNepal.controller;
 
 import java.util.List;
 
+import com.travelNepal.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,11 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.travelNepal.dto.BookingDTO;
 import com.travelNepal.entity.Booking;
-import com.travelNepal.exception.AdminException;
-import com.travelNepal.exception.BookingException;
-import com.travelNepal.exception.UsersException;
-import com.travelNepal.exception.LoginException;
-import com.travelNepal.exception.PackageException;
 import com.travelNepal.service.BookingService;
 import java.util.Map;
 
@@ -29,7 +25,7 @@ public class BookingController {
 	
 
 	@PostMapping("/make/{sessionId}")
-	public ResponseEntity<Booking> addBookingController(@Valid @RequestBody BookingDTO bookingdto, @PathVariable String sessionId) throws LoginException, BookingException, UsersException, PackageException{
+	public ResponseEntity<Booking> addBookingController(@Valid @RequestBody BookingDTO bookingdto, @PathVariable String sessionId) throws LoginException, BookingException, UsersException, PackageException, HotelException {
 		Booking book = bookService.makeBooking(sessionId, bookingdto);
 		return new ResponseEntity<>(book, HttpStatus.ACCEPTED);
 	}

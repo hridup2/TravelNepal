@@ -21,17 +21,18 @@ public class Feedback {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer feedbackId;
+
 	private String name;
 	private String feedback;
 	@JsonProperty(access = Access.READ_ONLY)
 	private LocalDateTime submitTime = LocalDateTime.now();
 
 	@ManyToOne
-	@JoinColumn(name = "packageId", nullable = false,referencedColumnName = "packageId")
+	@JoinColumn(name = "packageId", nullable = false)
 	private Package pack;
 
 	@ManyToOne
-	@JoinColumn(name = "userId", nullable = false,referencedColumnName = "userId")
+	@JoinColumn(name = "userId", nullable = false)
 	private Users user;
 
 }

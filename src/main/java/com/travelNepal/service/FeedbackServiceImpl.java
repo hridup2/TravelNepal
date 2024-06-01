@@ -54,8 +54,8 @@ public class FeedbackServiceImpl implements FeedbackService{
 		feedback.setPack(pack.get());
 		feedback.setSubmitTime(LocalDateTime.now());
 
-		feedbackRepo.save(feedback);
-		return new FeedbackResponse(LocalDateTime.now(), "Feedback sucessfully submitted");
+		Feedback saveFeedback=feedbackRepo.save(feedback);
+		return new FeedbackResponse(saveFeedback);
 	}
 
 	@Override
@@ -96,7 +96,7 @@ public class FeedbackServiceImpl implements FeedbackService{
 		Feedback updatedFeedback = feedbackRepo.save(existingFeedback);
 
 		// Step 6: Convert the updated feedback to FeedbackResponse (assuming you have a conversion method)
-		FeedbackResponse feedbackResponse = new FeedbackResponse(LocalDateTime.now(), "Feedback successfully updated");
+		FeedbackResponse feedbackResponse = new FeedbackResponse(updatedFeedback);
 
 		return feedbackResponse;
 	}

@@ -30,33 +30,15 @@ public class AuthServiceImpl implements AuthService {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public CurrentUserSession logIntoApplication(LoginDTO Dto) throws LoginException {
+    public CurrentUserSession logIntoApplication(LoginDTO dto) throws LoginException {
 
-        Users user = userRepo.findByEmail(Dto.getEmail());
+        Users user = userRepo.findByEmail(dto.getEmail());
         if (user == null) {
-            Admin admin = adminRepo.findByEmail(Dto.getEmail());
-            if (admin == null) {
-                throw new LoginException("Wrong Credential !");
-            }
-            if (Dto.getPassword().equals(admin.getPassword())) {
-
-                CurrentUserSession cus = new CurrentUserSession();
-                String sessionId = RandomKeyGenerator.generateRandomString(8);
-                cus.setLoginTime(LocalDateTime.now());
-                cus.setRole(Role.ADMIN);
-                cus.setUserId(admin.getUserId());
-                cus.setSessionId(sessionId);
-                cus.setUserEmail(admin.getEmail());
-
-                return sessionRepo.save(cus);
-            } else {
-                throw new LoginException("Wrong Credential!");
-            }
+            throw new LoginException("Wrong Credential!");
         } else {
-
             Optional<CurrentUserSession> loginUserSession = sessionRepo.findById(user.getUserId());
 
-            if (Dto.getPassword().equals(user.getPassword())) {
+            if (dto.getPassword().equals(user.getPassword())) {
 
                 if (loginUserSession.isPresent())
                     sessionRepo.delete(loginUserSession.get());
@@ -64,7 +46,14 @@ public class AuthServiceImpl implements AuthService {
                 CurrentUserSession cus = new CurrentUserSession();
                 String sessionId = RandomKeyGenerator.generateRandomString(8);
                 cus.setLoginTime(LocalDateTime.now());
-                cus.setRole(Role.CUSTOMER);
+
+                // Check the role of the user and set it accordingly
+                if ("ADMIN".equalsIgnoreCase(user.getRole())) {
+                    cus.setRole(CurrentUserSession.Role.ADMIN);
+                } else {
+                    cus.setRole(CurrentUserSession.Role.CUSTOMER);
+                }
+
                 cus.setUserId(user.getUserId());
                 cus.setSessionId(sessionId);
                 cus.setUserEmail(user.getEmail());

@@ -9,7 +9,7 @@ import java.util.List;
 public interface BookingService {
 
 
-    Booking makeBooking(String uuid, BookingDTO bookingdto) throws BookingException, LoginException, UsersException, PackageException;
+    Booking makeBooking(String uuid, BookingDTO bookingdto) throws BookingException, LoginException, UsersException, PackageException, HotelException;
 
     Booking cancelBooking(String sessionId, Integer bookingId) throws BookingException, LoginException, UsersException;
 

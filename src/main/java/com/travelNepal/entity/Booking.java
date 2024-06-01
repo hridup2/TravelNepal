@@ -52,10 +52,9 @@ public class Booking {
 
 	private BookingStatus bookingStatus;
 
-    
-//    // One-to-one relationship with PaymentDetails
-//	@JsonProperty(access = Access.READ_ONLY)
-//    @OneToOne(mappedBy = "booking",cascade = CascadeType.ALL)
-//    private PaymentDetails paymentDetails;
+	@JsonProperty(access = Access.READ_ONLY)
+	@ManyToOne
+	@JoinColumn(name = "hotelId")
+	private Hotel hotel;
 
 }

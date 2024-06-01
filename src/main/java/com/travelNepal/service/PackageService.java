@@ -4,15 +4,16 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import com.travelNepal.entity.Hotel;
 import com.travelNepal.entity.Package;
 import com.travelNepal.exception.AdminException;
+import com.travelNepal.exception.HotelException;
 import com.travelNepal.exception.LoginException;
 import com.travelNepal.exception.PackageException;
-import org.springframework.web.multipart.MultipartFile;
 
 public interface PackageService {
 
-	Package addPackage(String sessionId, Package pack, MultipartFile photo ) throws PackageException, LoginException, AdminException, IOException;
+	Package addPackage(String sessionId, Package pack) throws PackageException, LoginException, AdminException, IOException;
 
 	Package deletePackage(String sessionId,Integer packageId) throws PackageException, LoginException, AdminException;
 
@@ -22,5 +23,12 @@ public interface PackageService {
 
 	Optional<Package> getPackageById(Integer packageId);
 
-	Package updatePackage(String sessionId, Integer packageId, Package updatedPackage) throws PackageException, LoginException, AdminException;
+	Package updatePackage(String sessionId, Integer packageId, Package packageData) throws PackageException, LoginException, AdminException;
+
+	public Package assignHotelToPackage(String sessionId,Integer hotelId,Integer packageId) throws PackageException, HotelException,LoginException, AdminException;
+
+	public List<Hotel> getAvailableHotels(Integer packageId) throws PackageException,HotelException;
+
+	public List<Hotel> getAllHotels(String sessionId,Integer packageId) throws PackageException,HotelException,AdminException,LoginException;
+
 }
