@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.travelNepal.entity.Hotel;
+import org.springframework.data.jpa.repository.Query;
 
 public interface HotelRepository extends JpaRepository<Hotel, Integer> {
 
-    public List<Hotel> findByHotelName(String hotelName);
+    @Query(value = "SELECT * FROM hotel WHERE hotel_status = 'DELETED'", nativeQuery = true)
+    public List<Hotel> findAllHotel();
 }

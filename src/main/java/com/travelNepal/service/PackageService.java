@@ -27,8 +27,8 @@ public interface PackageService {
 
 	public Package assignHotelToPackage(String sessionId,Integer hotelId,Integer packageId) throws PackageException, HotelException,LoginException, AdminException;
 
-	public List<Hotel> getAvailableHotels(Integer packageId) throws PackageException,HotelException;
+//	public List<Hotel> getAvailableHotels(Integer packageId) throws PackageException,HotelException;
 
-	public List<Hotel> getAllHotels(String sessionId,Integer packageId) throws PackageException,HotelException,AdminException,LoginException;
+	public List<Hotel> getAllHotels(Integer packageId) throws PackageException,HotelException;
 
 }

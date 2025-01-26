@@ -53,5 +53,12 @@ public class BookingController {
 		List<Booking> bookings = bookService.viewAllBooking(sessionId);
 		return new ResponseEntity<>(bookings, HttpStatus.OK);
 	}
+
+	@GetMapping("/from/{startDateJourney}")
+	public List<Booking> getBookingsFromDate(@PathVariable String startDateJourney) {
+		List<Booking> booking= bookService.getBookingsFromDate(startDateJourney);
+		System.out.println("Bookings fetched: " + booking);
+		return booking;
+	}
 	
 }

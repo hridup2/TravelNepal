@@ -3,6 +3,10 @@ package com.travelNepal.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.travelNepal.entity.Package;
+import com.travelNepal.enums.HotelStatus;
+import com.travelNepal.enums.PackageStatus;
+import com.travelNepal.exception.PackageException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +18,6 @@ import com.travelNepal.exception.HotelException;
 import com.travelNepal.exception.LoginException;
 import com.travelNepal.repository.HotelRepository;
 import com.travelNepal.repository.SessionRepository;
-
-/**
- * @author Aman_Maurya
- *
- */
 
 @Service
 public class HotelServiceImpl implements HotelService {
@@ -39,80 +38,79 @@ public class HotelServiceImpl implements HotelService {
         if (cus.getRole() == Role.ADMIN) {
             if (hotel == null)
                 throw new HotelException("Hotel Details is Mandatory!");
-
+            hotel.setHotelPhotoUrl(hotel.getHotelPhotoUrl());
+            hotel.setHotelStatus(HotelStatus.ACTIVE);
             return hotelRepo.save(hotel);
         }
         throw new AdminException("User not Authorized!");
     }
 
     @Override
-    public Hotel updateHotelDetails(String sessionId, Hotel hotel)
+    public Hotel updateHotelDetails(String sessionId, Integer hotelId, Hotel hotelData)
             throws LoginException, AdminException, HotelException {
         CurrentUserSession cus = sessionRepo.findBySessionId(sessionId);
 
-        if (cus == null)
+        if (cus == null) {
             throw new LoginException("User not Logged In!");
-        if (cus.getRole() == Role.ADMIN) {
-            Optional<Hotel> hotelOpt = hotelRepo.findById(hotel.getHotelId());
-            if (hotelOpt.isEmpty())
-                throw new HotelException("Hotel Details Found in Record!");
-            else if (hotel == null)
-                throw new HotelException("Hotel Details is Mandatory!");
-            else
-                return hotelRepo.save(hotel);
         }
-        throw new AdminException("User not Authorized!");
+        if (cus.getRole() != CurrentUserSession.Role.ADMIN) {
+            throw new AdminException("User not Authorized!");
+        }
+            Optional<Hotel> hotelOpt = hotelRepo.findById(hotelId);
+            if (hotelOpt.isEmpty()){
+                throw new HotelException("Hotel Details Found in Record!");
+        }
+
+        // Update the hotel details
+        Hotel existingHotel = hotelOpt.get();
+        existingHotel.setHotelName(hotelData.getHotelName());
+        existingHotel.setHotelPhotoUrl(hotelData.getHotelPhotoUrl());
+        existingHotel.setEmail(hotelData.getEmail());
+        existingHotel.setHotelDescription(hotelData.getHotelDescription());
+        existingHotel.setHotelRent(hotelData.getHotelRent());
+        existingHotel.setHotelAddress(hotelData.getHotelAddress());
+
+        // Save the updated hotel and return it
+        return hotelRepo.save(existingHotel);
+
     }
 
     @Override
     public Hotel deleteHotelDetails(String sessionId, Integer hotelId)
             throws LoginException, AdminException, HotelException {
         CurrentUserSession cus = sessionRepo.findBySessionId(sessionId);
-
         if (cus == null)
-            throw new LoginException("User not Logged In!");
-        if (cus.getRole() == Role.ADMIN) {
-            Optional<Hotel> hotelOpt = hotelRepo.findById(hotelId);
-            if (hotelOpt.isEmpty())
-                throw new HotelException("Hotel Details Found in Record!");
-
-            hotelRepo.delete(hotelOpt.get());
-            return hotelOpt.get();
+            throw new LoginException("You're not logged in");
+        if (cus.getRole() != CurrentUserSession.Role.ADMIN) {
+            throw new AdminException("User not authorized");
         }
-        throw new AdminException("User not Authorized!");
+        Optional<Hotel> hotel = hotelRepo.findById(hotelId);
+        if (hotel.isEmpty())
+            throw new PackageException("Package not found");
+
+        hotel.get().setHotelStatus(HotelStatus.DELETED);
+
+        hotelRepo.save(hotel.get());
+        return hotel.get();
     }
 
     @Override
-    public Hotel getHotelByHotelId(String sessionId, Integer hotelId)
-            throws LoginException, AdminException, HotelException {
-        CurrentUserSession cus = sessionRepo.findBySessionId(sessionId);
+    public Optional<Hotel> getHotelByHotelId(Integer hotelId) throws HotelException {
+        Optional<Hotel> hotelOpt = hotelRepo.findById(hotelId);
 
-        if (cus == null)
-            throw new LoginException("User not Logged In!");
-        if (cus.getRole() == Role.ADMIN) {
-            Optional<Hotel> hotelOpt = hotelRepo.findById(hotelId);
-            if (hotelOpt.isEmpty())
-                throw new HotelException("Hotel Details Found in Record!");
-
-            return hotelOpt.get();
+        if (hotelOpt.isEmpty()) {
+            throw new HotelException("Hotel not found with ID: " + hotelId);
         }
-        throw new AdminException("User not Authorized!");
+
+        return hotelOpt;
     }
 
     @Override
-    public List<Hotel> getAllHotels(String sessionId) throws LoginException, AdminException, HotelException {
-        CurrentUserSession cus = sessionRepo.findBySessionId(sessionId);
-
-        if (cus == null)
-            throw new LoginException("User not Logged In!");
-        if (cus.getRole() == Role.ADMIN) {
-            List<Hotel> hotels = hotelRepo.findAll();
-            if (hotels.isEmpty())
-                throw new HotelException("Hotel Details Found in Record!");
-
-            return hotels;
-        }
-        throw new AdminException("User not Authorized!");
+    public List<Hotel> getAllHotelsDetails() throws HotelException {
+        List<Hotel> hotel = hotelRepo.findAllHotel();
+        if (hotel.isEmpty())
+            throw new PackageException("Package not found");
+        return hotel;
     }
 
 }

@@ -40,7 +40,9 @@ public class PackageServiceImpl implements PackageService {
         }
 
         if (cus.getRole() == CurrentUserSession.Role.ADMIN) {
+            pack.setPackageStatus(PackageStatus.ACTIVE);
             pack.setDestinationPhotoUrl(pack.getDestinationPhotoUrl());
+            pack.getPackageDescription().setMapPhotoUrl(pack.getPackageDescription().getMapPhotoUrl());
             return packageRepo.save(pack);
         } else {
             throw new AdminException("User not authorized");
@@ -67,6 +69,9 @@ public class PackageServiceImpl implements PackageService {
 
     @Override
     public List<Package> addAllPackages(List<Package> packages) {
+        for (Package pack : packages) {
+            pack.setPackageStatus(PackageStatus.ACTIVE);
+        }
         return packageRepo.saveAll(packages);
     }
 
@@ -105,6 +110,7 @@ public class PackageServiceImpl implements PackageService {
         existingPackage.setPackagePrice(packageData.getPackagePrice());
         existingPackage.setDays(packageData.getDays());
         existingPackage.setDestinationPhotoUrl(packageData.getDestinationPhotoUrl());
+        existingPackage.getPackageDescription().setMapPhotoUrl(existingPackage.getPackageDescription().getMapPhotoUrl());
 
         return packageRepo.save(existingPackage);
     }
@@ -137,61 +143,29 @@ public class PackageServiceImpl implements PackageService {
     }
 
     @Override
-    public List<Hotel> getAvailableHotels(Integer packageId) throws PackageException, HotelException {
-        List<Object[]> hotelsObj = packageRepo.getAvailableHotels(packageId);
+    public List<Hotel> getAllHotels(Integer packageId) throws PackageException, HotelException {
+        List<Hotel> hotelsObj = packageRepo.getAllHotels(packageId);
         if (hotelsObj.isEmpty()) {
-            throw new HotelException("hotel not found");
-        }
-        List<Hotel> hotels = new ArrayList<>();
-        for (Object[] obj : hotelsObj) {
-
-            Integer id = (Integer) obj[0];
-            String hotelAddress = (String) obj[1];
-            String hotelDescription = (String) obj[2];
-            String name = (String) obj[3];
-            Double hotelRent = (Double) obj[4];
-            Hotel.HotelType ht = Hotel.HotelType.valueOf((String) obj[5]);
-            boolean isAvailable = (Boolean) obj[6];
-            String email = (String) obj[7];
-
-            Hotel h = new Hotel(id, name, email, hotelDescription, ht, hotelRent, hotelAddress, isAvailable);
-            hotels.add(h);
+            throw new HotelException("No hotels found for packageId: " + packageId);
         }
 
-        return hotels;
-    }
+//        List<Hotel> hotels = new ArrayList<>();
+//        for (Object[] obj : hotelsObj) {
+//            Integer id = (Integer) obj[0];
+//            String hotelAddress = (String) obj[1];
+//            String hotelDescription = (String) obj[2];
+//            String name = (String) obj[3];
+//            Double hotelRent = (Double) obj[4];
+//            String email = (String) obj[7];
+//            String hotelPhoto = (String) obj[8];
 
-    @Override
-    public List<Hotel> getAllHotels(String sessionId, Integer packageId)
-            throws PackageException, HotelException, AdminException, LoginException {
-        CurrentUserSession cus = sessRepo.findBySessionId(sessionId);
-        if (cus == null)
-            throw new LoginException("you're not logged in");
-        if (cus.getRole() != CurrentUserSession.Role.ADMIN) {
-            throw new AdminException("user not authorized");
-        }
-        List<Object[]> hotelsObj = packageRepo.getAllHotels(packageId);
-        if (hotelsObj.isEmpty()) {
-            throw new HotelException("hotel not found");
-        }
-        List<Hotel> hotels = new ArrayList<>();
-        for (Object[] obj : hotelsObj) {
+            // Handle potential null values
+//            if (id != null && hotelAddress != null && hotelDescription != null && name != null && hotelRent != null && email != null && hotelPhoto != null) {
+//                Hotel h = new Hotel(id, hotelPhoto, name, email, hotelDescription, hotelRent, hotelAddress);
+//                hotels.add(h);
+//            }
 
-            Integer id = (Integer) obj[0];
-            String hotelAddress = (String) obj[1];
-            String hotelDescription = (String) obj[2];
-            String name = (String) obj[3];
-            Double hotelRent = (Double) obj[4];
-            Hotel.HotelType ht = Hotel.HotelType.valueOf(((String) obj[5]).toUpperCase());
-            boolean isAvailable = (Boolean) obj[6];
-            String email = (String) obj[7];
-
-            Hotel h = new Hotel(id, name, email, hotelDescription, ht, hotelRent, hotelAddress, isAvailable);
-            hotels.add(h);
-
-        }
-
-        return hotels;
+        return hotelsObj;
     }
 
 }

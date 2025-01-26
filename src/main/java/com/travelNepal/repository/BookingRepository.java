@@ -13,4 +13,6 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
 
     Optional<List<Booking>> findByUsers_userIdAndBookingStatus(Integer id, BookingStatus bookingStatus);
+
+    List<Booking> findByStartDateJourney(String startDateJourney);
 }

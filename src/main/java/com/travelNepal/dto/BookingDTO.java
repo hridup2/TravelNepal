@@ -10,10 +10,9 @@ public class BookingDTO {
 	private String bookingTittle;
 	private String guestEmail;
 	private Integer numberOfGuest;
-	private LocalDate startDateJourney;
+	private String startDateJourney;
 	private String description;
 	private Integer user_id;
 	private Integer package_id;
-	private Integer hotel_id;
 	
 }

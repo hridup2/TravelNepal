@@ -17,5 +17,7 @@ public interface BookingService {
 
     List<Booking> viewAllBooking(String sessionId) throws BookingException, LoginException, AdminException;
 
+    List<Booking> getBookingsFromDate(String startDateJourney);
+
 
 }
