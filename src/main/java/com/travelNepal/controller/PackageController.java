@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
 
 import java.io.IOException;
 import java.util.List;
@@ -71,15 +71,10 @@ public class PackageController {
         return new ResponseEntity<>(pp, HttpStatus.OK);
     }
 
-    @GetMapping("/getAvailableHotels/{packageId}")
-    public ResponseEntity<List<Hotel> > getAvailableHotelsController(@Valid  @PathVariable  Integer packageId) throws PackageException, LoginException, AdminException, HotelException {
-        List<Hotel> hotels = packService.getAvailableHotels(packageId);
+    @GetMapping("/getAllHotels/{packageId}")
+    public ResponseEntity<List<Hotel>> getAllHotelsController(@PathVariable Integer packageId) throws PackageException, HotelException {
+        List<Hotel> hotels = packService.getAllHotels(packageId);
         return new ResponseEntity<>(hotels, HttpStatus.OK);
     }
 
-    @GetMapping("/getAllHotels/{sessionId}")
-    public ResponseEntity<List<Hotel> > getAllHotelsController(@Valid  @PathVariable String sessionId,@RequestParam("packageId") Integer packageId) throws PackageException, LoginException, AdminException, HotelException {
-        List<Hotel> hotels = packService.getAllHotels(sessionId, packageId);
-        return new ResponseEntity<>(hotels, HttpStatus.OK);
-    }
 }

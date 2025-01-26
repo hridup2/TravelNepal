@@ -91,7 +91,6 @@ public class FeedbackServiceImpl implements FeedbackService{
 		}
 
 		// Step 4: Update the feedback with the new details
-		existingFeedback.setName(feedback.getName());
 		existingFeedback.setFeedback(feedback.getFeedback());
 		Feedback updatedFeedback = feedbackRepo.save(existingFeedback);
 

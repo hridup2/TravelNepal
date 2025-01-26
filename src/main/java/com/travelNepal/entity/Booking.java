@@ -34,7 +34,7 @@ public class Booking {
 	private String guestEmail;
 	private String description;
 	private Integer numberOfGuest;
-	private LocalDate startDateJourney;
+	private String startDateJourney;
 	
 	//relationships
 	

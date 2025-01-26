@@ -1,18 +1,13 @@
 package com.travelNepal.controller;
 
 import java.util.List;
+import java.util.Optional;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.travelNepal.entity.Hotel;
 import com.travelNepal.exception.AdminException;
@@ -20,7 +15,8 @@ import com.travelNepal.exception.HotelException;
 import com.travelNepal.exception.LoginException;
 import com.travelNepal.service.HotelService;
 
-@RestController("/hotels")
+@RestController
+@RequestMapping("/hotels")
 @CrossOrigin("*")
 public class HotelController {
 
@@ -35,11 +31,11 @@ public class HotelController {
         return new ResponseEntity<>(newHotel, HttpStatus.CREATED);
     }
 
-    @PutMapping("/updateHotel/{sessionId}")
-    public ResponseEntity<Hotel> updateHotelDetails(@PathVariable String sessionId, @RequestBody Hotel hotel)
+    @PutMapping("/updateHotel/{sessionId}/{hotelId}")
+    public ResponseEntity<Hotel> updateHotelDetails(@Valid @PathVariable String sessionId, @PathVariable Integer hotelId, @RequestBody Hotel hotelData)
             throws LoginException, AdminException, HotelException {
 
-        Hotel existingHotel = hotelService.updateHotelDetails(sessionId, hotel);
+        Hotel existingHotel = hotelService.updateHotelDetails(sessionId, hotelId, hotelData);
         return new ResponseEntity<>(existingHotel, HttpStatus.ACCEPTED);
     }
 
@@ -51,19 +47,19 @@ public class HotelController {
         return new ResponseEntity<>(hotel, HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/hotelDetailsById/{sessionId}/{hotelId}")
-    public ResponseEntity<Hotel> getHotelByHotelId(@PathVariable String sessionId, @PathVariable Integer hotelId)
+    @GetMapping("/hotelDetailsById/{hotelId}")
+    public ResponseEntity<Hotel> getHotelByHotelId( @PathVariable Integer hotelId)
             throws LoginException, AdminException, HotelException {
 
-        Hotel hotel = hotelService.getHotelByHotelId(sessionId, hotelId);
-        return new ResponseEntity<>(hotel, HttpStatus.ACCEPTED);
+       Optional<Hotel> hotel = hotelService.getHotelByHotelId(hotelId);
+        return hotel.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/allHotelsDetails/{sessionId}")
-    public ResponseEntity<List<Hotel>> getAllHotelsDetails(@PathVariable String sessionId)
-            throws LoginException, AdminException, HotelException {
+    @GetMapping("/allHotelsDetails")
+    public ResponseEntity<List<Hotel>> getAllHotelsDetails()
+            throws  HotelException {
 
-        List<Hotel> hotels = hotelService.getAllHotels(sessionId);
+        List<Hotel> hotels = hotelService.getAllHotelsDetails();
         return new ResponseEntity<>(hotels, HttpStatus.ACCEPTED);
     }
 

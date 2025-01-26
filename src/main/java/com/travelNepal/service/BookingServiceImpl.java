@@ -51,20 +51,13 @@ public class BookingServiceImpl implements BookingService {
 		Users us = user.get();
 
 		Booking newBooking = new Booking();
-		newBooking.setStartDateJourney(LocalDate.from(LocalDateTime.now()));
+		newBooking.setStartDateJourney(bookingdto.getStartDateJourney());
 		newBooking.setGuestEmail(bookingdto.getGuestEmail());
 		newBooking.setNumberOfGuest(bookingdto.getNumberOfGuest());
 		newBooking.setBookingTittle(bookingdto.getBookingTittle());
 		newBooking.setDescription(bookingdto.getDescription());
 		newBooking.setUsers(us);
         newBooking.setBookingStatus(BookingStatus.BOOKED);
-
-		Optional<Hotel> hotelopt = hotelRepo.findById(bookingdto.getHotel_id());
-		if (hotelopt.isEmpty())
-			throw new HotelException("hotel not available");
-		Hotel hotel = hotelopt.get();
-		hotel.getBookings().add(newBooking);
-		newBooking.setHotel(hotel);
 
 		Optional<Package> pac = packageRepo.findById(bookingdto.getPackage_id());
 		if (pac.isEmpty())
@@ -118,6 +111,12 @@ public class BookingServiceImpl implements BookingService {
 			return bookings;
 		}
 		throw new AdminException("User not Authorized!");
+	}
+
+	public List<Booking> getBookingsFromDate(String startDateJourney) {
+		List<Booking> booking= bookRepo.findByStartDateJourney(startDateJourney);
+		System.out.println("Bookings fetched: " + booking);
+		return booking;
 	}
 
 }
